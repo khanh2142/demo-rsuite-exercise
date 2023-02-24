@@ -1,5 +1,5 @@
 const Province = () => {
-  return <h1>code ở đây (src/pages/province/Province.jsx)</h1>;
+  return <></>;
 };
 
 export default Province;

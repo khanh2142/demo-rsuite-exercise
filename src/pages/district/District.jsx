@@ -1,8 +1,7 @@
 import SearchIcon from "@rsuite/icons/Search";
 import React, { useEffect, useState } from "react";
-import { Button, Input, InputGroup, SelectPicker, Stack, Table } from "rsuite";
+import { Button, IconButton, Input, InputGroup, Stack, Table } from "rsuite";
 import Flag from "../../components/flag/Flag";
-import { findMaxValue } from "../../utils/FindMaxValue";
 import DistrictPopup from "./components/DistrictPopup";
 
 const { Column, HeaderCell, Cell } = Table;
@@ -10,7 +9,6 @@ const { Column, HeaderCell, Cell } = Table;
 const District = ({ data, setData }) => {
   const [list, setList] = useState(data.District);
   const [params, setParams] = useState({
-    ProvinceCode: null,
     DistrictCode: "",
     DistrictName: "",
   });
@@ -44,12 +42,6 @@ const District = ({ data, setData }) => {
             params.DistrictName.toLowerCase()
           )
         );
-      })
-      .filter((item, index) => {
-        if (!params.ProvinceCode) {
-          return item;
-        }
-        return item.ProvinceCode === params.ProvinceCode;
       })
       .map((item, index) => {
         return {
@@ -110,12 +102,7 @@ const District = ({ data, setData }) => {
 
   const handleAdd = () => {
     const confirmAdd = (formValue) => {
-      const newDistrictCode = findMaxValue(data.District, "DistrictCode") + 1;
-
-      const arr = [
-        ...data.District,
-        { ...formValue, DistrictCode: newDistrictCode.toString() },
-      ];
+      const arr = [...data.District, formValue];
 
       setData({ ...data, District: arr });
       handleReload();
@@ -132,10 +119,6 @@ const District = ({ data, setData }) => {
       />
     );
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, [params]);
 
   useEffect(() => {
     setList(data.District);
@@ -183,19 +166,14 @@ const District = ({ data, setData }) => {
           </Stack>
         </Stack>
 
-        <SelectPicker
-          label="Tỉnh"
-          data={data.Province.map((item) => {
-            return {
-              label: item.ProvinceName,
-              value: item.ProvinceCode,
-            };
-          })}
-          onChange={(e) => {
-            setParams({ ...params, ProvinceCode: e });
-          }}
-          style={{ width: 224 }}
-        />
+        <IconButton
+          appearance="primary"
+          color="cyan"
+          icon={<SearchIcon />}
+          onClick={handleSearch}
+        >
+          Tìm kiếm
+        </IconButton>
 
         <Button appearance="primary" color="green" onClick={handleAdd}>
           Thêm
